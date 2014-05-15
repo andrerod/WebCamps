@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+ <body>
+   <script src="http://code.jquery.com/jquery.min.js"></script>
+   <script src="/socket.io/socket.io.js"></script>
+   <div id="inputs" style="font-size:60px">
+     <span>name: </span><input id="username" style="font-size:60px"></input>
+   </div>
+   <div id="chat" style="font-size:30"></div>
+   <script>
+     $('#username').change(function () {
+       var socket = io.connect('http://localhost:8080');
+       socket.emit('setName', $('#username').val())
+
+       $('#inputs').html('<input id="chatinput" style="font-size:60px"></input>').select()
+       $('#chatinput').select().change(function () {
+         socket.emit('chat', $('#chatinput').val())
+         $('#chatinput').val('')
+       })
+
+       socket.on('echo', function (data, name) {
+         $('#chat').append('<div><span style="color:blue">['+name+'] </span>'+data+'</div>')
+       });
+       socket.on('join', function (name) {
+         $('#chat').append('<div style="color:red">'+name+' has joined</div>')
+       })
+     })
+   </script>
+ </body>
+</html>
