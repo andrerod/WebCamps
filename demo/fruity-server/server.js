@@ -2,7 +2,6 @@ var util = require('util');
 
 var express = require('express');
 var bodyParser = require('body-parser');
-var azure = require('azure');
 
 var app = express();
 
@@ -23,4 +22,5 @@ require('./routes/game')(app);
 
 var port = process.env.PORT || 8080;
 app.listen(port);
+
 console.log(util.format('Express app started on port %s', port));
