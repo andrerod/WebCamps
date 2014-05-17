@@ -60,7 +60,7 @@ module.exports = function (app) {
 
   app.post('/update_username_score', function (req, res) {
     var username = req.body.username;
-    var score = req.body.score;
+    var score = req.body.currentScore;
 
     try {
       var tableService = azure.createTableService();

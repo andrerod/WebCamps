@@ -65,7 +65,7 @@
       buttons: {
         "Ok": function() {
           $.get('/get_username_score?username=' + $('#username').val(), function (data) {
-            user.maximumScore = data.maximumScore;
+            ko.mapping.fromJS(data, user);
 
             $('#username-dialog').dialog("close");
 

@@ -371,7 +371,8 @@ Game.prototype = {
       self.scene.remove(fruit);
 
       if (user) {
-        self.user.currentScore = parseInt($("#score").text(), 10) + 1;
+        self.user.currentScore(parseInt($("#score").text(), 10) + 1);
+        self.user.save();
       }
     }
   },
