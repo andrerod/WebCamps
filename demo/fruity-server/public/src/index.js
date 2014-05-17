@@ -2,8 +2,7 @@
   if (!Detector.webgl) {
     Detector.addGetWebGLMessage();
   } else {
-    var user = new ScoreBoardViewModel('', 0, 0);
-    ko.applyBindings(user);
+    var user;
 
     function displayError(message) {
       // create unique id for div
@@ -65,8 +64,10 @@
       buttons: {
         "Ok": function() {
           $.get('/get_username_score?username=' + $('#username').val(), function (data) {
+            user = new ScoreBoardViewModel('', 0, 0);
             ko.mapping.fromJS(data, user);
-
+            ko.applyBindings(user);
+            
             $('#username-dialog').dialog("close");
 
             if (data.error) {
