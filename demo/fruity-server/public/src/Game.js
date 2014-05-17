@@ -47,15 +47,16 @@ function Game (opts) {
 }
 
 Game.prototype = {
-  initScene: function() {
+  initScene: function(callback) {
     var self = this;
 
     self._initBackground(function () {
-      self._initKinectController();
       self._initFruits();
 
       // To use enter the axis length
       // self.initDebugaxis(10000);
+
+      callback();
     });
   },
 
@@ -79,7 +80,7 @@ Game.prototype = {
     });
   },
 
-  _initKinectController: function () {
+  initKinectController: function () {
     var self = this;
 
     //// Track here which users are in the scene
