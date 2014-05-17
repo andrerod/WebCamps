@@ -32,9 +32,18 @@ module.exports = function (app) {
       tableService.createTableIfNotExists('users', function () {
         tableService.queryEntity ('users', 'user', username, function (err, user) {
           if (!err && user) {
-            res.json({ max_score: user.max_score });
+            res.json({
+              username: username,
+              maximumScore: user.max_score,
+              currentScore: 0
+            });
           } else {
-            res.json({ error: 'User does not exist', max_score: 0 });
+            res.json({
+              error: 'User does not exist',
+              username: username,
+              maximumScore: score,
+              currentScore: score
+            });
           }
         });
       });
@@ -42,7 +51,9 @@ module.exports = function (app) {
       res.json({
         error: 'Data store connection could not be established. Your results will not be saved.',
         exception: e,
-        max_score: 0
+        username: username,
+        maximumScore: 0,
+        currentScore: 0
       });
     }
   });
@@ -59,12 +70,20 @@ module.exports = function (app) {
 
           tableService.updateEntity ('users', user, function () {
             console.log('updating user ' + username + ' with score ' + score);
-            res.json({ max_score: score });
+            res.json({
+              username: username,
+              maximumScore: score,
+              currentScore: score
+            });
           });
         } else {
           tableService.insertEntity ('users', { PartitionKey: 'user', RowKey: username, max_score: score }, function () {
             console.log('inserted user ' + username + ' with score ' + score);
-            res.json({ max_score: score });
+            res.json({
+              username: username,
+              maximumScore: score,
+              currentScore: score
+            });
           });
         }
       });
@@ -72,7 +91,9 @@ module.exports = function (app) {
       res.json({
         error: 'Data store connection could not be established. Your results will not be saved.',
         exception: e,
-        max_score: score
+        username: username,
+        maximumScore: score,
+        currentScore: score
       });
     }
   });

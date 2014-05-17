@@ -5,8 +5,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 
-  <!-- Stylesheets -->
+  <!-- Remtoe stylesheets -->
   <link type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.24/themes/ui-darkness/jquery-ui.css" rel="stylesheet" />
+
+  <!-- Local stylesheets -->
   <link rel="stylesheet" href="css/style.css" />
 
   <!-- Remote scripts -->
@@ -26,14 +28,14 @@
   </div>
 
   <div id="dash">
-    <!-- usar knockout para fazer bind disto a um model -->
-    <div id="max_score_div">Maximum score: <span id="max_score">0</span></div>
-    <div id="score_div">Score:<span id="score">0</span></div>
+    <div id="max_score_div">Maximum score: <span id="max_score" data-bind="value: maximumScore" /></div>
+    <div id="score_div">Score:<span id="score" data-bind="value: currentScore" /></div>
   </div>
 
   <!-- Main game div -->
   <div id="container"></div>
 
+  <script type="text/javascript" src="./src/models/scoreboard.js"></script>
   <script type="text/javascript" src="./src/game.js"></script>
   <script type="text/javascript" src="./src/index.js"></script>
 </body>

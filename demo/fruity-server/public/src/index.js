@@ -2,6 +2,9 @@
   if (!Detector.webgl) {
     Detector.addGetWebGLMessage();
   } else {
+    var user = new ScoreBoardViewModel('', 0, 0);
+    ko.applyBindings(user);
+
     function displayError(message) {
       // create unique id for div
       var dialog_id = "error_dialog_" + new Date().getTime();
@@ -46,7 +49,7 @@
         container: $('#container')
       };
 
-      var game = new Game(opts);
+      var game = new Game(user, opts);
 
       game.initScene(function () {
         game.initKinectController();
@@ -62,8 +65,8 @@
       buttons: {
         "Ok": function() {
           $.get('/get_username_score?username=' + $('#username').val(), function (data) {
-            // TODO: use knockout to bind this
-            $('#max_score').text(data.max_score);
+            user.maximumScore = data.maximumScore;
+
             $('#username-dialog').dialog("close");
 
             if (data.error) {

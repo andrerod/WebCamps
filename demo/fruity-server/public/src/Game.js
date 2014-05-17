@@ -1,4 +1,5 @@
-function Game (opts) {
+function Game (user, opts) {
+  this.user      = user;
   this.width     = opts.width;
   this.height    = opts.height;
   this.container = opts.container;
@@ -370,9 +371,7 @@ Game.prototype = {
       self.scene.remove(fruit);
 
       if (user) {
-        var score = parseInt($("#score").text(), 10) + 1;
-        $.post('/update_username_score', { username: $('#username').val(), score: score });
-        $("#score").text(score);
+        self.user.currentScore = parseInt($("#score").text(), 10) + 1;
       }
     }
   },
