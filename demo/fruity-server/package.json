@@ -1,7 +1,7 @@
 {
   "name": "fruity-server",
   "version": "0.0.1",
-  "description": "Webcamps demo",
+  "description": "Webcamps demo - server",
   "main": "index.js",
   "author": "andrerod",
   "license": "MIT",
