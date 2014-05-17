@@ -39,7 +39,7 @@
       var game = new Game(opts);
 
       game.initScene(function () {
-        // game.initKinectController();
+        game.initKinectController();
 
         game.renderLoop();
       });

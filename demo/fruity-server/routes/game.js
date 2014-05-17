@@ -1,5 +1,7 @@
 var fs = require('fs');
 
+var azure = require('azure');
+
 module.exports = function (app) {
   app.get('/background', function (req, res) {
     function sendLocal() {
