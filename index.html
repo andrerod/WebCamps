@@ -1,30 +1,470 @@
-<!DOCTYPE html>
-<html>
- <body>
-   <script src="http://code.jquery.com/jquery.min.js"></script>
-   <script src="/socket.io/socket.io.js"></script>
-   <div id="inputs" style="font-size:60px">
-     <span>name: </span><input id="username" style="font-size:60px"></input>
-   </div>
-   <div id="chat" style="font-size:30"></div>
-   <script>
-     $('#username').change(function () {
-       var socket = io.connect('http://localhost:8080');
-       socket.emit('setName', $('#username').val())
 
-       $('#inputs').html('<input id="chatinput" style="font-size:60px"></input>').select()
-       $('#chatinput').select().change(function () {
-         socket.emit('chat', $('#chatinput').val())
-         $('#chatinput').val('')
-       })
+<!doctype html>
+<html lang="en">
 
-       socket.on('echo', function (data, name) {
-         $('#chat').append('<div><span style="color:blue">['+name+'] </span>'+data+'</div>')
-       });
-       socket.on('join', function (name) {
-         $('#chat').append('<div style="color:red">'+name+' has joined</div>')
-       })
-     })
-   </script>
- </body>
+  <head>
+    <meta charset="utf-8" />
+
+    <title>Building Node.js Applications</title>
+
+    <meta name="description" content="Building Node.js Applications" />
+    <meta name="author" content="Andre Rodrigues" />
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <link rel="stylesheet" href="css/reveal.min.css" />
+    <link rel="stylesheet" href="css/theme/default.css" id="theme" />
+
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css" />
+
+    <!-- Custom styling -->
+    <link rel="stylesheet" href="css/main.css"/>
+
+    <!-- If the query includes 'print-pdf', use the PDF print sheet -->
+    <script>
+      document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+    </script>
+
+    <!-- Twitter Buttons -->
+    <script>
+      !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="http://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="reveal">
+
+      <!-- Any section element inside of this container is displayed as a slide -->
+      <div class="slides">
+
+        <section>
+          <h1>Building <b>Node.js</b> Applications</h1>
+
+          <div class="authors">
+            <p>Andre Rodrigues</p>
+            <p><small>Software Development Engineer @ Microsoft</small><p>
+            <a href="https://twitter.com/andremrodrigues" class="twitter-follow-button" data-show-count="false" data-size="large">Follow @andremrodrigues</a>
+          </div>
+        </section>
+
+        <section>
+          <h2>Presentation</h2>
+
+          <a href="http://www.andrerodrigues.me/WebCamps">http://www.andrerodrigues.me/WebCamps</a>
+        </section>
+
+        <section>
+          <img class="image" width="245" height="66" src="images/nodejslogo.png" />
+        </section>
+
+        <section>
+          <h2>Node.js <b>is not</b></h2>
+
+          <ul class="clean-list">
+            <li>... a language</li>
+            <li>... a web framework</li>
+          </ul>
+
+          <aside class="notes">
+            <ul>
+              <li>Not a language
+                <ul>
+                  <li>Javascript is the language, not Node.js</li>
+                </ul>
+              </li>
+              <li>Not a web framework
+                <ul>
+                  <li>It speaks many protocols, TCP, UDP, SPDY</li>
+                  <li>Built-in support for building</li>
+                  <li>Django or Rails-like applications</li>
+                </ul>
+              </li>
+            </ul>
+          </aside>
+        </section>
+
+        <section>
+          <h2>Node.js <b>is</b></h2>
+
+          <p>... a platform built on Chrome's JavaScript runtime for easily building fast and scalable network applications.</p>
+        </section>
+
+        <section>
+          <h2>Who's using it ?</h2>
+        </section>
+
+        <section>
+          <img class="image" width="1079" height="733" src="images/using.png" />
+        </section>
+
+        <section>
+          <h2>Code snippets</h2>
+
+          <a href="https://github.com/andrerod/webcamps">https://github.com/andrerod/webcamps</a>
+        </section>
+
+        <section>
+          <section>
+            <h2>Installing Node.js</h2>
+            <br/>
+            <h3>Binary Installers</h3>
+            <ul class="clean-list">
+              <li><a href="http://nodejs.org">nodejs.org</a></li>
+            </ul>
+
+            <aside class="notes">
+              <ul>
+                <li>Binary Installers
+                  <ul>
+                    <li>There are binary installers for each major OS</li>
+                    <li>Go to nodejs.org or github and download the tarball or zipball</li>
+                  </ul>
+                </li>
+              </ul>
+            </aside>
+          </section>
+
+          <section>
+            <h3>Versions</h3>
+            <ul>
+              <li>Stable: v0.8.16</li>
+              <li>Unstable: v0.9.4</li>
+            </ul>
+
+            <aside class="notes">
+              <ul>
+                <li>Versions
+                  <ul>
+                    <li>Stable and unstable versions: Even minor versions are stable</li>
+                    <li>Unstable versions are for developers, testing the bleeding edge</li>
+                    <li>Use the latest stable!</li>
+                  </ul>
+                </li>
+              </ul>
+            </aside>
+          </section>
+        </section>
+
+        <section>
+          <h2>Installing <b>Node.js</b> from source</h2>
+
+          <p>Using git to clone the project</p>
+
+          <div class="bash">
+            <pre><code contenteditable>
+git clone https://github.com/joyent/node.git
+cd node
+git checkout v0.8.16
+./configure && make
+sudo make install
+            </code></pre>
+
+            <a class="gist" href="https://gist.github.com/andrerod/4469373">Gist #1</a>
+          </div>
+        </section>
+
+        <section>
+          <h2>Installing <b>Node.js</b> from source</h2>
+
+          <p>Download and untar or unzip</p>
+
+          <div class="bash">
+            <pre><code contenteditable>
+wget http://nodejs.org/dist/v0.8.16/node-v0.8.16.tar.gz
+tar -zxf node-v0.8.16.tar.gz
+cd node-v0.8.16
+./configure
+make
+sudo make install
+            </code></pre>
+
+            <a class="gist" href="https://gist.github.com/andrerod/4469411">Gist #2</a>
+          </div>
+        </section>
+
+        <section>
+          <h2>Hello world</h2>
+
+          <div>
+            <pre><code contenteditable>
+var http = require('http');
+http.createServer(function (req, res) {
+  res.writeHead(200, {'Content-Type': 'text/plain'});
+  res.end('Hello World\n');
+}).listen(1337, '127.0.0.1');
+console.log('Server running at http://127.0.0.1:1337/');
+            </code></pre>
+
+            <a class="gist" href="https://gist.github.com/andrerod/4469418">Gist #3</a>
+          </div>
+        </section>
+
+        <section>
+          <h2>Node.js approach to <b>concurrency</b></h2>
+        </section>
+
+        <section>
+          <h2>Concurrency</h2>
+
+          <p>Several computations executing simultaneously and, potentially, interacting with each other</p>
+        </section>
+
+        <section>
+          <h2><b>First</b> basis <b>theory</b></h2>
+
+          <p>I/O is expensive</p>
+        </section>
+
+        <section>
+          <h2><b>Second</b> basis <b>theory</b></h2>
+
+          <p>Thread-per-connection is memory-expensive</p>
+        </section>
+
+        <section>
+          <h2>Multi thread vs event based</h2>
+          <img class="image" width="644" height="309" src="images/nginx-apache.png" />
+        </section>
+
+        <section>
+          <p>like nginx, node.js is <b>event based</b></p>
+        </section>
+
+        <section>
+          <h2>Node.js approach</h2>
+
+          <ul>
+            <li>Single threaded execution</li>
+            <li>Don't wait for IO</li>
+          </ul>
+
+          <div>
+            <pre><code contenteditable>
+function handleResult(result) {
+  console.log('I have results: ' + result);
+}
+ 
+database.query('SELECT * from ARTICLES WHERE ID=1', handleResult);
+console.log('I have started the query');
+            </code></pre>
+
+            <a class="gist" href="https://gist.github.com/andrerod/4469449">Gist #4</a>
+          </div>
+        </section>
+
+        <section>
+          <h2>Node.js philosophy</h2>
+        </section>
+
+        <section>
+          <h2>Node.js is <b>minimal</b></h2>
+          <p>Complexity is userland</p>
+        </section>
+
+        <section>
+          <h2>Minimal <b>surface area</b></h2>
+          <p>Expose only the absolute essential</p>
+        </section>
+
+        <section>
+          <h2><b>Reuse</b></h2>
+          <p>A functional API</p>
+
+          <pre><code contenteditable>
+a = …
+a.useLog(console.log);
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>What is a module?</h2>
+
+          <p>an isolated scope that contains an unit of logic</p>
+
+          <div>
+            <pre><code contenteditable>
+var pi = Math.PI;
+
+module.exports = function diameter(radius) {
+  return2 * radius;
+}
+
+module.exports = function circumference(radius) {
+  return pi * diameter(radius);
+}
+
+module.exports = function area(radius) {
+  return pi * Math.pow(radius, 2);
+}
+            </code></pre>
+
+            <a class="gist" href="https://gist.github.com/andrerod/4488004">Gist #5</a>
+          </div>
+        </section>
+
+        <section>
+          <h2>Modules</h2>
+
+          <p>can contain <b>private</b> code</p>
+
+          <pre><code contenteditable>var pi = Math.PI;
+
+module.exports = function(radius) {
+  function diameter() {
+    return 2 * radius;
+  }
+  function circumference() {
+    return pi * diameter();
+  }
+  function area() {
+    return pi * Math.pow(radius, 2);
+  }
+  return {
+    area: area,
+    circumference: circumference
+  };
+}
+          </code></pre>
+
+            <a class="gist" href="https://gist.github.com/andrerod/4488005">Gist #6</a>
+        </section>
+
+        <section>
+          <h2>Using modules</h2>
+
+          <p>... from the REPL</p>
+
+          <pre><code contenteditable>
+$node
+> var circle = require('./circle.js');
+          </code></pre>
+
+            <a class="gist" href="https://gist.github.com/andrerod/4488009">Gist #7</a>
+        </section>
+
+        <section>
+          <h2>Using modules</h2>
+
+          <pre><code contenteditable>
+> c = circle(5);
+{ area: [Function: area],
+  circumference: [Function: circumference] }
+> c.area();
+78.53981633974483
+> c.circumference();
+31.41592653589793
+          </code></pre>
+
+            <a class="gist" href="https://gist.github.com/andrerod/4488012">Gist #8</a>
+        </section>
+
+        <section>
+          <h2>Speak about npm registry</h2>
+        </section>
+
+        <section>
+          <img class="image" src="images/npmregistry.png" />
+        </section>
+
+        <section>
+          <h2>NPM</h2>
+
+          <p>A unix like tool for managing node modules</p>
+          <pre><code contenteditable>
+$ npm search request
+$ npm doc request
+$ npm install request
+$ npm remove request
+          </code></pre>
+
+            <a class="gist" href="https://gist.github.com/andrerod/4488020">Gist #9</a>
+        </section>
+
+        <section>
+          <h2>Installing modules</h2>
+
+          <pre><code contenteditable>
+$ npm install request
+$ ls node_modules
+request
+$ npm remove request
+          </code></pre>
+
+            <a class="gist" href="https://gist.github.com/andrerod/4488024">Gist #10</a>
+        </section>
+
+        <section>
+          <h2>Package.json</h2>
+
+          <pre><code contenteditable>
+{
+  "name": "circle",
+  "version": "1.0.0",
+  "dependencies": {
+    "moduleA": "*",
+    "moduleB": "1.0.1",
+    "moduleC": "1.0.x"
+  }
+}
+          </code></pre>
+
+            <a class="gist" href="https://gist.github.com/andrerod/4488032">Gist #11</a>
+        </section>
+
+        <section>
+          <h2>Why is Node.js interesting ?</h2>
+        </section>
+
+        <section>
+          <ul>
+            <li>Same language on both client and server
+            <li>Code reuse between the two</li>
+            <li>Lean</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Great for the cloud</h2>
+        </section>
+      </div>
+
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.min.js"></script>
+
+    <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+
+        theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+          { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+          // { src: 'plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+        ]
+      });
+
+    </script>
+  </body>
 </html>
