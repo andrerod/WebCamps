@@ -65,6 +65,7 @@
         "Ok": function() {
           $.get('/get_username_score?username=' + $('#username').val(), function (data) {
             user = new ScoreBoardViewModel('', 0, 0);
+            alert(user);
             ko.mapping.fromJS(data, user);
             ko.applyBindings(user);
             

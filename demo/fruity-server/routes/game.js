@@ -62,6 +62,10 @@ module.exports = function (app) {
     var username = req.body.username;
     var score = req.body.currentScore;
 
+    console.log(req);
+    console.log('isto');
+    console.log(username);
+
     try {
       var tableService = azure.createTableService();
       tableService.queryEntity ('users', 'user', username, function (err, user) {
