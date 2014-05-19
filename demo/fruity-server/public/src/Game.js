@@ -50,6 +50,7 @@ Game.prototype = {
   initScene: function(callback) {
     var self = this;
 
+    self.particles = [];
     self._initBackground(function () {
       self._initFruits();
 
@@ -120,7 +121,6 @@ Game.prototype = {
     ];
 
     //// Connect to skeleton server
-    alert("trying to connect to kinect client." );
     var kinect = openni('http://localhost:8081/skeleton');
 
     var scaleFactor = 1.0;
@@ -290,6 +290,8 @@ Game.prototype = {
   },
 
   _update: function() {
+    TWEEN.update();
+
     this._updateFruits();
     this._updateCamera();
     this.stats.update();
@@ -311,7 +313,7 @@ Game.prototype = {
 
         if (fruit.position.y < self.initFruitsPositionY) {
           self.destroyFruit(fruit);
-        } else if (Object.keys(self.users).length > 0) {
+        } else if (self.users && Object.keys(self.users).length > 0) {
           Object.keys(self.users).forEach(function (userId) {
             var user = self.users[userId];
 
@@ -367,6 +369,10 @@ Game.prototype = {
 
     var index = self._fruits.indexOf(fruit);
     if (index >= 0) {
+      if (fruit.position) {
+        // self.createExplosion(fruit.position);
+      }
+
       self._fruits.splice(index, 1);
       self.scene.remove(fruit);
 
@@ -376,6 +382,51 @@ Game.prototype = {
         $("#score").text(score);
       }
     }
+  },
+
+  createExplosion: function (position) {
+    var self = this;
+
+    var material = new THREE.SpriteMaterial({
+        transparent: false,
+        useScreenCoordinates: false,
+        color: 0xffffff // CHANGED
+    });
+
+    for ( var i = 0; i < 1000; i++ ) {
+
+      particle = new THREE.Sprite( material );
+
+      self.initParticle(position, particle, i * 10 );
+
+      self.scene.add( particle );
+    }
+  },
+
+  initParticle: function(position, particle, delay ) {
+    var self = this;
+
+    var particle = this instanceof THREE.Sprite ? this : particle;
+    var delay = delay !== undefined ? delay : 0;
+
+    particle.position.set(position.x, position.z, position.z)
+    particle.scale.x = particle.scale.y = Math.random() * 32 + 16;
+
+    new TWEEN.Tween( particle )
+      .delay( delay )
+      .to( {}, 10000 )
+      .onComplete(self.initParticle)
+      .start();
+
+    new TWEEN.Tween( particle.position )
+      .delay( delay )
+      .to( { x: Math.random() * 4000 - 2000, y: Math.random() * 1000 - 500, z: Math.random() * 4000 - 2000 }, 10000 )
+      .start();
+
+    new TWEEN.Tween( particle.scale )
+      .delay( delay )
+      .to( { x: 0, y: 0 }, 10000 )
+      .start();
   },
 
   initDebugaxis: function (axisLength) {
