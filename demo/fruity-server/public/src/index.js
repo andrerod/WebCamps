@@ -49,7 +49,9 @@
       var game = new Game(opts);
 
       game.initScene(function () {
-        game.initKinectController();
+        $("#kinect").click(function() {
+          game.initKinectController();
+        });
 
         game.renderLoop();
       });

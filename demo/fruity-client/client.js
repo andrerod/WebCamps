@@ -7,6 +7,10 @@ try {
   console.log('Kinect initialization on the server failed');
 }
 
+server.on('connection', function () {
+  console.log('server connected');
+})
+
 server.listen(process.env.PORT || 8081, function() {
-  console.log('web server listening...');
+  console.log('client listening...');
 });

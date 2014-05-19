@@ -120,6 +120,7 @@ Game.prototype = {
     ];
 
     //// Connect to skeleton server
+    alert("trying to connect to kinect client." );
     var kinect = openni('http://localhost:8081/skeleton');
 
     var scaleFactor = 1.0;
