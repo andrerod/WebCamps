@@ -9,7 +9,8 @@ router.get('/background', function (req, res) {
   function sendLocal() {
     // use local copy
     console.log('sending local file');
-    fs.createReadStream('./public/images/background.jpg').pipe(res);
+    var imagePath = __dirname + '/../public/images/background.jpg'
+    fs.createReadStream(imagePath).pipe(res);
   }
 
   try {
