@@ -63,7 +63,7 @@
       resizable: false,
       buttons: {
         "Ok": function() {
-          $.get('/get_username_score?username=' + $('#username').val(), function (data) {
+          $.get('/game/get_username_score?username=' + $('#username').val(), function (data) {
             $('#max_score').text(data.max_score);
             $('#username-dialog').dialog("close");
 

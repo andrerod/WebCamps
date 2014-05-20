@@ -65,7 +65,7 @@ Game.prototype = {
     var self = this;
 
     var texture = THREE.ImageUtils.loadTexture(
-      '/background', THREE.UVMapping, function () {
+      '/game/background', THREE.UVMapping, function () {
 
       var material = new THREE.MeshBasicMaterial({
         color: 0xffffff, 
@@ -106,11 +106,11 @@ Game.prototype = {
       // "right_fingertip",
       "left_hip",
       "left_knee",
-      "left_ankle",
+      // "left_ankle",
       "left_foot",
       "right_hip",
       "right_knee",
-      "right_ankle",
+      // "right_ankle",
       "right_foot"  
     ];
 
@@ -130,7 +130,7 @@ Game.prototype = {
       console.log('newuser', userId);
       if (! self.users[userId]) {
 
-        var material = new THREE.MeshBasicMaterial( { color: 0xff0000, wireframe: false } );
+        var material = new THREE.MeshBasicMaterial( { color: 0xffff00, wireframe: false } );
         var killerJointMaterial = new THREE.MeshBasicMaterial( { color: 0x00ffff, wireframe: false } );
 
         var geometry = new THREE.SphereGeometry( 20 / scaleFactor );
@@ -378,7 +378,7 @@ Game.prototype = {
 
       if (user) {
         var score = parseInt($("#score").text(), 10) + 1;
-        $.post('/update_username_score', { username: $('#username').val(), score: score });
+        $.post('/game/update_username_score', { username: $('#username').val(), score: score });
         $("#score").text(score);
       }
     }
