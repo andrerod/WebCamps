@@ -35,7 +35,7 @@ router.get('/get_username_score', function (req, res) {
     tableService.createTableIfNotExists('users', function () {
       tableService.queryEntity ('users', 'user', username, function (err, user) {
         if (!err && user) {
-          res.json({ max_score: user.max_score });
+          res.json(user);
         } else {
           res.json({ max_score: 0 });
         }
@@ -57,17 +57,17 @@ router.post('/update_username_score', function (req, res) {
   try {
     var tableService = azure.createTableService();
     tableService.queryEntity ('users', 'user', username, function (err, user) {
-      if (!err && user && score > user.max_score) {
-        user.max_score = score;
+      user.max_score = score;
 
+      if (!err && user && score > user.max_score) {
         tableService.updateEntity ('users', user, function () {
           console.log('updating user ' + username + ' with score ' + score);
-          res.json({ max_score: score });
+          res.json(user);
         });
       } else {
         tableService.insertEntity ('users', { PartitionKey: 'user', RowKey: username, max_score: score }, function () {
           console.log('inserted user ' + username + ' with score ' + score);
-          res.json({ max_score: score });
+          res.json(user);
         });
       }
     });
