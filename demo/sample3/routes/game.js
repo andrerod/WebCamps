@@ -11,11 +11,11 @@ router.get('/background', function(req, res) {
       if (!err && blobs.length > 0) {
         blobService.getBlob('azure', blobs[0].name).pipe(res);
       } else {
-		res.status(404).send('Not found');
+		    res.status(404).send('Not found');
       }
     });
   } catch (e) {
-	res.status(404).send('Not found');
+	  res.status(404).send('Not found');
   }
 });
 
